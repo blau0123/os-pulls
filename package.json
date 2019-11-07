@@ -1,0 +1,15 @@
+{
+  "name": "practice-git",
+  "version": "1.0.0",
+  "description": "yeet",
+  "main": "practice.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "blau",
+  "license": "ISC",
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  }
+}
