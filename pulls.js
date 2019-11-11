@@ -10,24 +10,44 @@ function getListOfReposAndPRs(allPRs){
 	for (var i = 0; i < allPRs.length; i++){
 		// each element in allPRs is a list of PRs, sorted ascending
 		let currRepo = allPRs[i];
-	
-		console.log(currRepo.length);
+
 		// problem: losing some pull reqs??
 		for (var j = 0; j < currRepo.length; j++){
-			console.log(currRepo[j].html_url);
 			let user = currRepo[j].user.login;
 			// get repo url by remove the /pull/{number} at the end
-			let repoPRTo = currRepo[j].html_url;
-			let timeOfPR = currRepo[j].merged_at;
+			let repoPRTo = currRepo[j].html_url.split("/pull/", 2)[0];
+			let timeOfPR = new Date(currRepo[j].merged_at);
+
+			// processing merged_at time to something readable
+			let dateStr = timeOfPR.toDateString();
+			let timeStr = timeOfPR.toLocaleTimeString();
 			
 			// make sure the pr was actually merged in
-			if (timeOfPR != null){
-				listOfPRs.push({user: user, repo: repoPRTo, time: timeOfPR});
+			if (currRepo[j].merged_at != null){
+				listOfPRs.push({
+					user: user, 
+					repo: repoPRTo,
+					date: dateStr,
+					time: timeStr,
+				});
 			}
 		}
 	}
-	
-	console.log(listOfPRs)
+
+	listOfPRs = listOfPRs.sort((a,b) => {
+		let dateA = new Date(a.date);
+		let dateB = new Date(b.date);
+
+		if (dateA - dateB == 0){	
+			let timeA = Date.parse('1/01/2019 ' + a.time);
+			let timeB = Date.parse('1/01/2019 ' + b.time);	
+			return timeB - timeA;
+		}
+		return new Date(b.date) - new Date(a.date);
+	});
+
+	console.log(listOfPRs);
+	return listOfPRs;
 }
 
 /*
@@ -60,4 +80,3 @@ async function getRepos(){
 }
 
 getRepos();
-
