@@ -15,7 +15,8 @@ function getListOfReposAndPRs(allPRs){
 		for (var j = 0; j < currRepo.length; j++){
 			let user = currRepo[j].user.login;
 			// get repo url by remove the /pull/{number} at the end
-			let repoPRTo = currRepo[j].html_url.split("/pull/", 2)[0];
+			let repoURL = currRepo[j].html_url.split("/pull/", 2)[0];
+			let repoName = repoURL.split("/os-ucsd/", 2)[1];
 			let timeOfPR = new Date(currRepo[j].merged_at);
 
 			// processing merged_at time to something readable
@@ -26,7 +27,8 @@ function getListOfReposAndPRs(allPRs){
 			if (currRepo[j].merged_at != null){
 				listOfPRs.push({
 					user: user, 
-					repo: repoPRTo,
+					repoURL: repoURL,
+					repoName: repoName,
 					date: dateStr,
 					time: timeStr,
 				});
