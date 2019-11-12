@@ -1,7 +1,5 @@
 var fetch = require('node-fetch');
 
-// bitmoji/2 and profiles/3 have null times:
-
 /*
  * Gets the name of the user who made a given PR and the repo they made the PR to
  */
@@ -11,7 +9,7 @@ function getListOfReposAndPRs(allPRs){
 		// each element in allPRs is a list of PRs, sorted ascending
 		let currRepo = allPRs[i];
 
-		// problem: losing some pull reqs??
+		// iterates through list of pr's for a repo
 		for (var j = 0; j < currRepo.length; j++){
 			let user = currRepo[j].user.login;
 			// get repo url by remove the /pull/{number} at the end
@@ -36,6 +34,7 @@ function getListOfReposAndPRs(allPRs){
 		}
 	}
 
+	// sorting all of the pr's based on time merged in
 	listOfPRs = listOfPRs.sort((a,b) => {
 		let dateA = new Date(a.date);
 		let dateB = new Date(b.date);
@@ -67,10 +66,8 @@ async function getPullRequests(repo){
 async function getRepos(){
 	let reposResponse = await fetch('https://api.github.com/orgs/os-ucsd/repos')
 	let repos = await reposResponse.json();
-
-	//console.log(repos);
 	
-	
+	// get pr's for all repos
 	let allPRs = await Promise.all( 
 		repos.map(repo => {
 			// each pr returned is a list of pr's for a single repo
